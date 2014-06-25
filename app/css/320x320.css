@@ -1,0 +1,47 @@
+html, body {position:relative;height:100%;}
+#viewport {
+    width: 320px;
+    height: 320px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -160px;
+    margin-top: -160px;
+    box-sizing: border-box;
+    padding: 0;
+    outline: 0;
+    box-shadow: 2px 2px 5px #000;
+    background: #4C729F;
+    overflow: hidden;
+}
+#totp {
+    position: absolute;
+    color: #eee;
+    height: 100px;
+    width: 100%;
+    top: 110px;
+    line-height: 100px;
+    font-size: 84px;
+    text-align: center;
+}
+#timer {
+    position: absolute;
+    color: #eee;
+    width: 100%;
+    top: 210px;
+    line-height: 50px;
+    font-size: 24px;
+    text-align: center;
+}
+#timer:before {
+    content: ':';
+}
+#account {
+    position: absolute;
+    color: #eee;
+    width: 100%;
+    top: 60px;
+    line-height: 50px;
+    font-size: 24px;
+    text-align: center;
+}

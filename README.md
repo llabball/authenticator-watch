@@ -1,1 +1,1 @@
-### Authenticator Watch
+### Authenticator for wearables

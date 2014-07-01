@@ -14,12 +14,250 @@
 
   <!-- 320x320 -->
 	<div id="viewport">
-    <span id="account">user@host.com</span>
-    <span id="totp">123456</span>
-    <span id="timer"></span>
+
+		<section id="dashboard">
+			<div class="dashboard-page">
+				<div class="dashboard-btn-wrapper">
+					<a id="dashboard-btn-add" class="dashboard-btn" onclick="javascript: editAccount()">+</a>
+				</div>
+			</div>
+		</section>
+
+		<section id="dialog-scanorcode">
+			<a href="#input-scan" class="dialog-diagonal-btn right" id="scanbtn">scan</a>
+			<a href="#input-code" class="dialog-diagonal-btn left" id="codebtn">code</a>
+		</section>
+
+		<section id="dialog-delete">
+			<a href="#dashboard" class="dialog-diagonal-btn right" id="deletebtn" onclick="javascript: deleteAccount();">delete</a>
+			<a href="#account" class="dialog-diagonal-btn left">cancel</a>
+		</section>
+
+		<section id="input-secret">
+			<input type="text" id="input-text-secret" value="" />
+			<div class="action-bar">
+    		<a href="#input-email" class="action-bar-btn left">ok</a>
+    		<a class="action-bar-btn right">undo</a>
+    	</div>
+		</section>
+
+		<section id="input-email">
+			<input type="text" id="input-text-email" value="" />
+			<div class="action-bar">
+    		<a href="#input-issuer" class="action-bar-btn left">ok</a>
+    		<a class="action-bar-btn right">undo</a>
+    	</div>
+		</section>
+
+		<section id="input-issuer">
+			<input type="text" id="input-text-issuer" value="" />
+			<div class="action-bar">
+    		<a href="#account" class="action-bar-btn left" onclick="javascript: storeAccount();">save</a>
+    		<a class="action-bar-btn right">undo</a>
+    	</div>
+		</section>
+
+		<section id="input-scan">
+			input-scan
+			<div class="action-bar">
+    		<a href="#dashboard" class="action-bar-btn right">cancel</a>
+    	</div>
+		</section>
+
+		<section id="account">
+			<div id="account-name">labball</div>
+    	<div id="account-hotp">123456</div>
+    	<div id="account-host">github.com</div>
+    	<div id="account-progressbar"><div id="account-progressbar-progress"></div></div>
+    	<div class="action-bar">
+    		<a class="action-bar-btn left" onclick="javascript: editAccount(document.getElementById('currentEmail').value)">edit</a>
+    		<a href="#dialog-delete" class="action-bar-btn middle">del</a>
+    		<a href="#dashboard" class="action-bar-btn right">menu</a>
+    	</div>
+    	<input id="currentEmail" type="hidden" value="">
+    </section>
+    
 	</div>
 
 	<script type="text/javascript" src="js/totp.js"></script>
-	<script type="text/javascript" src="js/app.js"></script>
+	<!-- script type="text/javascript" src="js/app.js"></script-->
+	<script type="text/javascript">
+	  //data mock
+		localStorage.otpStore = JSON.stringify({
+			version: '1.0.0',
+			accounts: {
+				'llabball@github.com': {
+					secret: 'SS3M362LELW7IFMVUFEBSD34LMHL5QU6',
+					issuer: 'github',
+					created_at: '2014-06-28T22:55:53.740Z'
+				},
+				'llabball@googlemail.com': {
+					secret: 'SS3M362LEXC7IFMVUFEBSD34LMHL5QU6',
+					issuer: 'gogole',
+					created_at: '2014-06-18T22:55:53.740Z'
+				},
+				'yoracogonzales@github.com': {
+					secret: 'SS11362LELW7IFMVUFEBSD34LMHL5QU6',
+					issuer: 'github',
+					created_at: '2014-06-08T22:55:53.740Z'
+				}
+			}
+		})
+
+		var store = (function () {
+			var _store, _accounts
+
+			try {
+				_store = JSON.parse(localStorage.otpStore)
+			} catch (e) {
+        _store = {version: '1.0.0'}
+			}
+			_accounts = _store.accounts || {}
+
+			function save () {
+				_store.accounts = _accounts
+				localStorage.otpStore = JSON.stringify(_store)
+			}
+
+			return {
+				getAccounts: function () {return _accounts},
+				getAccount: function (email) {return _accounts[email]},
+				delAccount: function (email) {
+					if (_accounts[email]) {
+						delete _accounts[email]
+						save()
+						return true
+					} else {
+						return false
+					}
+				},
+				putAccount: function (email, secret, issuer) {
+					if (email && secret && issuer) {
+						_accounts[email] = {
+							issuer: issuer,
+							secret: secret,
+							created_at: new Date().toISOString()
+						}
+						save()
+						return true
+					} else {
+						return false
+					}
+				}
+			}
+		})()
+
+		window.location.href = '#dashboard'
+		refreshDashboard()
+
+		function refreshDashboard () {
+			var accounts = store.getAccounts()
+				,	addbtn 	 = document.getElementById('dashboard-btn-add').parentElement
+
+			while (addbtn.previousSibling) {
+				addbtn.previousSibling.remove()
+			}
+
+			for (email in accounts) {
+				if (accounts.hasOwnProperty(email))
+					addDashboardbutton(email)
+			}
+		}
+
+		function addDashboardbutton (email) {
+			var account = email.match(/\w+/g)
+				, user 		= (account[0]) ? account[0] : 'unknown'
+			  , host 		= (account[1]) ? account[1] : 'unknown'
+				,	addbtn 	= document.getElementById('dashboard-btn-add').parentElement
+			  , page 		= addbtn.parentElement
+				, wrapper = document.createElement('div')
+				,	button  = document.createElement('a')
+
+				wrapper.className = 'dashboard-btn-wrapper'
+				button.className = 'dashboard-btn'				
+				button.href = '#account'
+				button.onclick = function () {showAccount(email)}
+				button.innerHTML = user + '<br>' + host
+
+				wrapper.appendChild(button)
+				page.insertBefore(wrapper, addbtn)
+		}
+		
+		//refresh the account view when triggered
+		function showAccount (email) {
+			var parts     = email.match(/\w+/g)
+				, user 		  = (parts[0]) ? parts[0] : 'unknown'
+			  , host 		  = (parts[1]) ? parts[1] : 'unknown'
+			
+			document.getElementById('account-name').innerText = user
+			document.getElementById('account-hotp').innerText = HOTP.getOTP(store.getAccount(email).secret)
+			document.getElementById('account-host').innerText = host
+			document.getElementById('currentEmail').value			= email
+
+			startProgressBar()
+		}
+		function startProgressBar() {
+			document.getElementById('account-progressbar-progress').style['-webkit-animation-delay'] = '-'+(new Date().getSeconds())+'s'
+		}
+
+		function editAccount (email, secret, issuer) {
+			var path = ''
+
+			if (email && secret && issuer) {
+				path = '#input-issuer'
+			} else {
+				if (email) {
+					var account = store.getAccount(email)
+					if (account) {
+						secret = account.secret
+						issuer = account.issuer
+						path = '#input-issuer'
+					} else {
+						path = '#input-secret'
+					}
+				} else {
+					path = '#input-secret'
+				}
+			}
+			
+			document.getElementById('input-text-secret').value = secret || ''
+			document.getElementById('input-text-email').value  = email  || ''
+			document.getElementById('input-text-issuer').value = issuer || ''
+
+			window.location.href = path
+		}
+
+		//delete an account
+		function deleteAccount () {
+			var email = document.getElementById('currentEmail').value
+			
+			if (store.delAccount(email))
+				refreshDashboard()
+		}
+
+		//store Account
+		function storeAccount () {
+			var secret 	     = document.getElementById('input-text-secret').value
+				,	email  	     = document.getElementById('input-text-email').value
+				, issuer 			 = document.getElementById('input-text-issuer').value
+				, currentEmail = document.getElementById('currentEmail').value
+
+			if (store.putAccount(email, secret, issuer)) {
+				if (email !== currentEmail)
+					store.delAccount(currentEmail)
+
+				refreshDashboard()
+				showAccount(email)
+			} else {
+				console.error('couldn\'t store the new account')
+			}
+		}
+
+		//calc the progress when the accout page is requested directly
+		window.onload = function () {
+     	document.getElementById('account-progressbar-progress').style['-webkit-animation'] = 'linear progress 60s infinite'
+			startProgressBar()
+		}
+	</script>
 </body>
 </html>

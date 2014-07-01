@@ -1,4 +1,4 @@
-html, body {position:relative;height:100%;}
+html, body {position:relative;height:100%;margin: 0;}
 #viewport {
     width: 320px;
     height: 320px;
@@ -10,38 +10,136 @@ html, body {position:relative;height:100%;}
     box-sizing: border-box;
     padding: 0;
     outline: 0;
-    box-shadow: 2px 2px 5px #000;
-    background: #4C729F;
+    overflow: hidden;
+    background: black;
+    font-family: sans-serif;
+}
+section {
+    min-width: 320px;
+    height: 320px;
+    position: absolute;
+    background: black;
+    padding: 0;
+    margin: 0;
+    display: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+section:target {
+    display: block;
+}
+a, a:hover, a:visited, a:active {color:#0080F0;}
+.action-bar {
+    background-color: #1A1A1A;
+    margin-bottom: 30px;
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    font-size: 24px;
+    line-height: 50px;
+}
+.action-bar-btn {
+    text-decoration: none;
+    width: 33%;
+    display: inline-block;
+    float: left;
+    box-sizing: border-box;
+    position: absolute;
+}
+.action-bar-btn.left {
+    text-align: left;
+    padding-left: 30px;
+    left: 0;
+}
+.action-bar-btn.middle {
+    text-align: center;
+    margin-left: -16.5%;
+    left: 50%;
+}
+.action-bar-btn.right {
+    text-align: right;
+    padding-right: 30px;
+    right: 0;
+}
+/* dashboard ============================================== */
+#dashboard {display: inline-block;}
+.dashboard-page {
+    float: left;
+    width: 320px;
+}
+.dashboard-btn-wrapper {
+    width: 160px;
+    height: 160px;
+    display: table;
+    float: left;
+}
+.dashboard-btn {
+    width: 160px;
+    height: 160px;
+    box-sizing: border-box;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    text-decoration: none;
+    font-size: larger;
     overflow: hidden;
 }
-#totp {
-    position: absolute;
-    color: #eee;
-    height: 100px;
-    width: 100%;
-    top: 110px;
-    line-height: 100px;
-    font-size: 84px;
-    text-align: center;
+#dashboard-btn-add {
+    font-size: 50px;
+    font-weight: bold;
 }
-#timer {
-    position: absolute;
-    color: #eee;
-    width: 100%;
-    top: 210px;
-    line-height: 50px;
-    font-size: 24px;
-    text-align: center;
+
+
+/* dialog-scanorcode, dialog-delete ======================= */
+.dialog-diagonal-btn {
+    width: 320px;
+    height: 160px;  
+    display: inline-block;
+    box-sizing: border-box;
+    line-height: 160px;
+    text-decoration: none;
+    font-size: xx-large;
 }
-#timer:before {
-    content: ':';
-}
+.dialog-diagonal-btn.right {text-align: right;padding-right:70px;}
+.dialog-diagonal-btn.left  {padding-left: 70px;}
+
+/* accounts widgets ======================================= */
 #account {
-    position: absolute;
     color: #eee;
     width: 100%;
-    top: 60px;
     line-height: 50px;
     font-size: 24px;
     text-align: center;
+}
+#account-hotp {
+    color: white;
+    width: 100%;
+    line-height: 70px;
+    font-size: 84px;
+}
+#account-progressbar {
+    color: #eee;
+    width: 70%;
+    height: 1px;
+    background: white;
+    margin: 20px auto 0 auto;
+    overflow: hidden;
+}
+#account-progressbar-progress {
+    background-color: #0080F0;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+@-webkit-keyframes progress {
+    0% { -webkit-transform: translate3d(-100%,0,0); }
+  100% { -webkit-transform: translate3d(0,0,0); }
+}
+#account-name {
+    margin-top: 20px;
+
+}
+#account-host {
+    display: inline-block;
 }

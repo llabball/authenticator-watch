@@ -12,7 +12,7 @@ html, body {position:relative;height:100%;margin: 0;}
     outline: 0;
     overflow: hidden;
     background: black;
-    font-family: sans-serif;
+    font-family: sans-serif; 
 }
 section {
     min-width: 320px;
@@ -28,9 +28,8 @@ section {
 section:target {
     display: block;
 }
-a, a:hover, a:visited, a:active {color:#0080F0;}
+a, a:hover, a:visited, a:active {color: #0080F0;}
 .action-bar {
-    background-color: #1A1A1A;
     margin-bottom: 30px;
     bottom: 0;
     position: absolute;
@@ -46,6 +45,7 @@ a, a:hover, a:visited, a:active {color:#0080F0;}
     float: left;
     box-sizing: border-box;
     position: absolute;
+    cursor: pointer;
 }
 .action-bar-btn.left {
     text-align: left;
@@ -73,6 +73,7 @@ a, a:hover, a:visited, a:active {color:#0080F0;}
     height: 160px;
     display: table;
     float: left;
+    position: relative;
 }
 .dashboard-btn {
     width: 160px;
@@ -85,10 +86,15 @@ a, a:hover, a:visited, a:active {color:#0080F0;}
     font-size: larger;
     overflow: hidden;
 }
-#dashboard-btn-add {
-    font-size: 50px;
-    font-weight: bold;
+.dashboard-btn i {
+    display: block;
+    line-height: 32px;
+    color: #464646;
 }
+#dashboard-btn-add {
+    font-size: 24px;
+}
+#dashboard-btn-add i {color: #0080F0;}
 
 
 /* dialog-scanorcode, dialog-delete ======================= */
@@ -116,7 +122,7 @@ a, a:hover, a:visited, a:active {color:#0080F0;}
     color: white;
     width: 100%;
     line-height: 70px;
-    font-size: 84px;
+    font-size: 72px;
 }
 #account-progressbar {
     color: #eee;
